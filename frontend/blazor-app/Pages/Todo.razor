@@ -1,18 +1,124 @@
 ﻿@page "/todo"
 
+@using BlazorApp.Shared.SortableList;
+
 <PageTitle>todo - @AppState.AppName</PageTitle>
 
 <h1>todo</h1>
 
-<p role="status">Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">click me</button>
+<section class="section">
+    <div class="container">
+        <div id="todo-tasks" class="column">
+            <SortableList Group="sharedLists" Items="TodoTasks" Context="item" OnRemove="ListOneRemove">
+                <SortableItemTemplate>
+                    <div class=" card has-border has-background-white">
+                        <p class="is-size-4 p-2 ml-4">@item.Title</p>
+                    </div>
+                </SortableItemTemplate>
+            </SortableList>
+        </div>
+        <div id="done-tasks" class="column">
+            <SortableList Group="sharedLists" OnRemove="ListTwoRemove" Items="DoneTasks" Context="item">
+                <SortableItemTemplate>
+                    <div class="card has-background-white has-border">
+                        <p class="is-size-4 p-2 ml-4">@item.Title</p>
+                    </div>
+                </SortableItemTemplate>
+        </SortableList>
+        </div>
+    </div>
+</section>
 
 @code {
-    private int currentCount = 0;
+    private List<TodoTask> TodoTasks = new List<TodoTask>() {
+        new TodoTask{
+            ID = 1,
+            Title = "test",
+            Description = "test desc",
+        },
+        new TodoTask{
+            ID = 2,
+            Title = "test 2",
+            Description = "test desc 2",
+        },
+        new TodoTask{
+            ID = 3,
+            Title = "test 3",
+            Description = "test desc 3",
+        },
+        new TodoTask{
+            ID = 4,
+            Title = "test 4",
+            Description = "test desc 4",
+        },
+        new TodoTask{
+            ID = 5,
+            Title = "test 5",
+            Description = "test desc 5",
+        },
+    };
+    
+    private List<TodoTask> DoneTasks = new List<TodoTask>() {
+        new TodoTask{
+            ID = 1,
+            Title = "done 1",
+            Description = "done 1 desc",
+        },
+        new TodoTask{
+            ID = 2,
+            Title = "done 2",
+            Description = "done 2 desc",
+        },
+        new TodoTask{
+            ID = 3,
+            Title = "done 3",
+            Description = "done 3 desc",
+        },
+    };
 
-    private void IncrementCount()
+    private void ListOneRemove((int oldIndex, int newIndex) indices)
     {
-        currentCount++;
+        // get the item at the old index in list 1
+        var item = TodoTasks[indices.oldIndex];
+
+        // add it to the new index in list 2
+        TodoTasks.Insert(indices.newIndex, item);
+
+        // remove the item from the old index in list 1
+        TodoTasks.Remove(TodoTasks[indices.oldIndex]);
+    }
+
+    private void ListTwoRemove((int oldIndex, int newIndex) indices)
+    {
+        // get the item at the old index in list 2
+        var item = DoneTasks[indices.oldIndex];
+
+        // add it to the new index in list 1
+        DoneTasks.Insert(indices.newIndex, item);
+
+        // remove the item from the old index in list 2
+        DoneTasks.Remove(DoneTasks[indices.oldIndex]);
     }
 }
+
+<style>
+    .container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .column {
+        width: 48%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        min-height: 400px;
+    }
+
+    .task {
+        background-color: #f4f4f4;
+        padding: 10px;
+        margin-bottom: 10px;
+        cursor: move;
+    }
+</style>
