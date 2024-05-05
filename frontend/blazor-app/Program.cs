@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using blazor_app;
-using blazor_app.Models;
+using BlazorApp;
+using BlazorApp.Models;
 using System.Net.NetworkInformation;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);

@@ -1,4 +1,4 @@
-﻿namespace blazor_app.Models;
+﻿namespace BlazorApp.Models;
 
 public class AppState
 {
